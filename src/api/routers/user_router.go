@@ -9,4 +9,5 @@ func User(r *gin.RouterGroup) {
 	handler := handlers.NewUserHandler()
 
 	r.GET("/", handler.User)
+	r.GET("/:id", handler.User)
 }

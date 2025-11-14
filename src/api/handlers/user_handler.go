@@ -26,3 +26,20 @@ func (u *UserHandler) User(c *gin.Context) {
 		helper.GenerateBaseResponse("hello world", true, 0),
 	)
 }
+
+// User godoc
+// @Summary Get user by id
+// @Description Get user by id
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param id path int true "User ID"
+// @Success 200 {object} helper.BaseHttpResponse "Success"
+// @Failure 400 {object} helper.BaseHttpResponse "Failed"
+// @Router /v1/users/{id} [get]
+func (u *UserHandler) UserById(c *gin.Context) {
+	id := c.Param("id")
+	c.JSON(200,
+		helper.GenerateBaseResponse("hello world "+id, true, 0),
+	)
+}
