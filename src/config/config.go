@@ -101,15 +101,16 @@ func ParseConfig(v *viper.Viper) (*Config, error) {
 	return &cfg, nil
 }
 
-func LoadConfig(fileName string, fileType string) (*viper.Viper, error) {
+func LoadConfig(filename string, fileType string) (*viper.Viper, error) {
 	v := viper.New()
-	v.SetConfigName(fileName)
 	v.SetConfigType(fileType)
+	v.SetConfigName(filename)
 	v.AddConfigPath(".")
 	v.AutomaticEnv()
 
 	err := v.ReadInConfig()
 	if err != nil {
+		log.Printf("Unable to read config: %v", err)
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
 			return nil, errors.New("config file not found")
 		}
@@ -120,9 +121,9 @@ func LoadConfig(fileName string, fileType string) (*viper.Viper, error) {
 
 func getConfigPath(env string) string {
 	if env == "docker" {
-		return "config/config-docker"
+		return "../config/config-docker"
 	} else if env == "production" {
-		return "config/config-production"
+		return "../config/config-production"
 	} else {
 		return "../config/config-development"
 	}

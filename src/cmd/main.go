@@ -5,6 +5,7 @@ import (
 	"github.com/mohsen104/web-api/config"
 	"github.com/mohsen104/web-api/data/cache"
 	"github.com/mohsen104/web-api/data/db"
+	"github.com/mohsen104/web-api/data/db/migrations"
 	"github.com/mohsen104/web-api/pkg/logging"
 )
 
@@ -13,17 +14,19 @@ func main() {
 
 	logger := logging.NewLogger(cfg)
 
-	api.InitServer(cfg)
-
-	defer cache.CloseRedis()
 	err := cache.InitRedis(cfg)
+	defer cache.CloseRedis()
 	if err != nil {
 		logger.Fatal(logging.Redis, logging.Startup, err.Error(), nil)
 	}
 
-	defer db.CloseDb()
 	err = db.InitDb(cfg)
+	defer db.CloseDb()
 	if err != nil {
 		logger.Fatal(logging.Postgres, logging.Startup, err.Error(), nil)
 	}
+
+	migrations.Up_1()
+
+	api.InitServer(cfg)
 }

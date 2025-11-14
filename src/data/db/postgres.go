@@ -13,7 +13,8 @@ import (
 var dbClient *gorm.DB
 
 func InitDb(cfg *config.Config) error {
-	cnn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=%s TimeZone=Asia/Tehran",
+	var err error
+	cnn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s TimeZone=Asia/Tehran",
 		cfg.Postgres.Host,
 		cfg.Postgres.Port,
 		cfg.Postgres.User,
@@ -22,7 +23,7 @@ func InitDb(cfg *config.Config) error {
 		cfg.Postgres.SSLMode,
 	)
 
-	dbClient, err := gorm.Open(postgres.Open(cnn), &gorm.Config{})
+	dbClient, err = gorm.Open(postgres.Open(cnn), &gorm.Config{})
 
 	if err != nil {
 		return err

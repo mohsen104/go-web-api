@@ -1,9 +1,10 @@
 server:
-  Port: 8080
-  runMode: debug
+  internalPort: 5000
+  externalPort: 0
+  runMode: release
   domain: localhost
 logger:
-  filePath: ../logs/
+  filePath: /app/logs/
   encoding: json
   level: debug
   logger: zap
@@ -41,8 +42,3 @@ otp:
   expireTime: 120
   digits: 6
   limiter: 100
-jwt:
-  secret: "mySecretKey"
-  refreshSecret: "mySecretKey"
-  accessTokenExpireDuration: 1440
-  refreshTokenExpireDuration: 60
