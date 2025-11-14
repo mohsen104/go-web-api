@@ -2,10 +2,11 @@ package validations
 
 import (
 	"errors"
-	"log"
 	"regexp"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/mohsen104/web-api/config"
+	"github.com/mohsen104/web-api/pkg/logging"
 )
 
 func IranianMobileNumberValidator(fld validator.FieldLevel) bool {
@@ -18,7 +19,8 @@ func IranianMobileNumberValidator(fld validator.FieldLevel) bool {
 	res, err := regexp.MatchString(`^09[0-9]{9}$`, val)
 
 	if err != nil {
-		log.Print(err.Error())
+		logger := logging.NewLogger(config.GetConfig())
+		logger.Error(logging.Validation, logging.MobileValidation, err.Error(), nil)
 	}
 
 	return res
