@@ -1,5 +1,5 @@
 definitions:
-  helper.BaseHttpResponse:
+  github_com_mohsen104_web-api_api_helper.BaseHttpResponse:
     properties:
       error: {}
       result: {}
@@ -9,10 +9,10 @@ definitions:
         type: boolean
       validationErrors:
         items:
-          $ref: '#/definitions/validations.ValidationError'
+          $ref: '#/definitions/github_com_mohsen104_web-api_api_validations.ValidationError'
         type: array
     type: object
-  validations.ValidationError:
+  github_com_mohsen104_web-api_api_validations.ValidationError:
     properties:
       message:
         type: string
@@ -37,11 +37,11 @@ paths:
         "200":
           description: Success
           schema:
-            $ref: '#/definitions/helper.BaseHttpResponse'
+            $ref: '#/definitions/github_com_mohsen104_web-api_api_helper.BaseHttpResponse'
         "400":
           description: Failed
           schema:
-            $ref: '#/definitions/helper.BaseHttpResponse'
+            $ref: '#/definitions/github_com_mohsen104_web-api_api_helper.BaseHttpResponse'
       summary: Get user
       tags:
       - users
@@ -62,11 +62,11 @@ paths:
         "200":
           description: Success
           schema:
-            $ref: '#/definitions/helper.BaseHttpResponse'
+            $ref: '#/definitions/github_com_mohsen104_web-api_api_helper.BaseHttpResponse'
         "400":
           description: Failed
           schema:
-            $ref: '#/definitions/helper.BaseHttpResponse'
+            $ref: '#/definitions/github_com_mohsen104_web-api_api_helper.BaseHttpResponse'
       summary: Get user by id
       tags:
       - users

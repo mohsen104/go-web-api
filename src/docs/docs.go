@@ -32,13 +32,13 @@ const docTemplate = `{
                     "200": {
                         "description": "Success",
                         "schema": {
-                            "$ref": "#/definitions/helper.BaseHttpResponse"
+                            "$ref": "#/definitions/github_com_mohsen104_web-api_api_helper.BaseHttpResponse"
                         }
                     },
                     "400": {
                         "description": "Failed",
                         "schema": {
-                            "$ref": "#/definitions/helper.BaseHttpResponse"
+                            "$ref": "#/definitions/github_com_mohsen104_web-api_api_helper.BaseHttpResponse"
                         }
                     }
                 }
@@ -70,13 +70,13 @@ const docTemplate = `{
                     "200": {
                         "description": "Success",
                         "schema": {
-                            "$ref": "#/definitions/helper.BaseHttpResponse"
+                            "$ref": "#/definitions/github_com_mohsen104_web-api_api_helper.BaseHttpResponse"
                         }
                     },
                     "400": {
                         "description": "Failed",
                         "schema": {
-                            "$ref": "#/definitions/helper.BaseHttpResponse"
+                            "$ref": "#/definitions/github_com_mohsen104_web-api_api_helper.BaseHttpResponse"
                         }
                     }
                 }
@@ -84,7 +84,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "helper.BaseHttpResponse": {
+        "github_com_mohsen104_web-api_api_helper.BaseHttpResponse": {
             "type": "object",
             "properties": {
                 "error": {},
@@ -98,12 +98,12 @@ const docTemplate = `{
                 "validationErrors": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/validations.ValidationError"
+                        "$ref": "#/definitions/github_com_mohsen104_web-api_api_validations.ValidationError"
                     }
                 }
             }
         },
-        "validations.ValidationError": {
+        "github_com_mohsen104_web-api_api_validations.ValidationError": {
             "type": "object",
             "properties": {
                 "message": {

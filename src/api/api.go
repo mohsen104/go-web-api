@@ -26,6 +26,7 @@ func InitServer(cfg *config.Config) {
 
 	r.Use(gin.Recovery())
 	r.Use(gin.Logger())
+	r.Use(middlewares.DefaultStructuredLogger(cfg))
 	r.Use(middlewares.Cors(cfg))
 	r.Use(middlewares.LimitByRequest())
 
