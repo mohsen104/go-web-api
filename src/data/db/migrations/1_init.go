@@ -9,19 +9,19 @@ import (
 
 var logger = logging.NewLogger(config.GetConfig())
 
-func Up_1() {
+func Up1() {
 	database := db.GetDb()
 
 	tables := []interface{}{}
 
 	country := models.Country{}
-	city := models.Country{}
+	city := models.City{}
 
-	if database.Migrator().HasTable(country) {
+	if !database.Migrator().HasTable(country) {
 		tables = append(tables, country)
 	}
 
-	if database.Migrator().HasTable(city) {
+	if !database.Migrator().HasTable(city) {
 		tables = append(tables, city)
 	}
 
@@ -29,6 +29,6 @@ func Up_1() {
 	logger.Info(logging.Postgres, logging.Migration, "tables created", nil)
 }
 
-func Down_1() {
+func Down1() {
 
 }

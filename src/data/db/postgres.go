@@ -23,8 +23,9 @@ func InitDb(cfg *config.Config) error {
 		cfg.Postgres.SSLMode,
 	)
 
-	dbClient, err = gorm.Open(postgres.Open(cnn), &gorm.Config{})
+	print(cnn)
 
+	dbClient, err = gorm.Open(postgres.Open(cnn), &gorm.Config{})
 	if err != nil {
 		return err
 	}
