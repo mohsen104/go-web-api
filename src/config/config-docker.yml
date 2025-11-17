@@ -1,6 +1,5 @@
 server:
-  internalPort: 5000
-  externalPort: 0
+  port: 3000
   runMode: release
   domain: localhost
 logger:

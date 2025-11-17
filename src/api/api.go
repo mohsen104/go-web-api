@@ -28,11 +28,11 @@ func InitServer(cfg *config.Config) {
 	r.Use(gin.Logger())
 	r.Use(middlewares.DefaultStructuredLogger(cfg))
 	r.Use(middlewares.Cors(cfg))
-	r.Use(middlewares.LimitByRequest())
+	// r.Use(middlewares.LimitByRequest())
 
 	RegisterSwagger(r, cfg)
 
-	RegisterRouters(r)
+	RegisterRouters(r, cfg)
 
 	r.Run(fmt.Sprintf(":%s", cfg.Server.Port))
 }
@@ -47,12 +47,12 @@ func RegisterSwagger(r *gin.Engine, cfg *config.Config) {
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 }
 
-func RegisterRouters(r *gin.Engine) {
+func RegisterRouters(r *gin.Engine, cfg *config.Config) {
 	api := r.Group("/api")
 	v1 := api.Group("/v1")
 
 	{
 		user := v1.Group("/users")
-		routers.User(user)
+		routers.User(user, cfg)
 	}
 }

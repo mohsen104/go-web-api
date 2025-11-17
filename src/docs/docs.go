@@ -15,9 +15,9 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/v1/users": {
-            "get": {
-                "description": "Get user",
+        "/v1/users/send-otp": {
+            "post": {
+                "description": "Send otp",
                 "consumes": [
                     "application/json"
                 ],
@@ -27,9 +27,20 @@ const docTemplate = `{
                 "tags": [
                     "users"
                 ],
-                "summary": "Get user",
+                "summary": "Send otp",
+                "parameters": [
+                    {
+                        "description": "GetOtpRequest",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/services.GetOtpRequest"
+                        }
+                    }
+                ],
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "Success",
                         "schema": {
                             "$ref": "#/definitions/github_com_mohsen104_web-api_api_helper.BaseHttpResponse"
@@ -40,40 +51,8 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/github_com_mohsen104_web-api_api_helper.BaseHttpResponse"
                         }
-                    }
-                }
-            }
-        },
-        "/v1/users/{id}": {
-            "get": {
-                "description": "Get user by id",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "users"
-                ],
-                "summary": "Get user by id",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "User ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "schema": {
-                            "$ref": "#/definitions/github_com_mohsen104_web-api_api_helper.BaseHttpResponse"
-                        }
                     },
-                    "400": {
+                    "409": {
                         "description": "Failed",
                         "schema": {
                             "$ref": "#/definitions/github_com_mohsen104_web-api_api_helper.BaseHttpResponse"
@@ -117,6 +96,19 @@ const docTemplate = `{
                 },
                 "value": {
                     "type": "string"
+                }
+            }
+        },
+        "services.GetOtpRequest": {
+            "type": "object",
+            "required": [
+                "mobileNumber"
+            ],
+            "properties": {
+                "mobileNumber": {
+                    "type": "string",
+                    "maxLength": 11,
+                    "minLength": 11
                 }
             }
         }

@@ -23,43 +23,34 @@ definitions:
       value:
         type: string
     type: object
+  services.GetOtpRequest:
+    properties:
+      mobileNumber:
+        maxLength: 11
+        minLength: 11
+        type: string
+    required:
+    - mobileNumber
+    type: object
 info:
   contact: {}
 paths:
-  /v1/users:
-    get:
+  /v1/users/send-otp:
+    post:
       consumes:
       - application/json
-      description: Get user
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Success
-          schema:
-            $ref: '#/definitions/github_com_mohsen104_web-api_api_helper.BaseHttpResponse'
-        "400":
-          description: Failed
-          schema:
-            $ref: '#/definitions/github_com_mohsen104_web-api_api_helper.BaseHttpResponse'
-      summary: Get user
-      tags:
-      - users
-  /v1/users/{id}:
-    get:
-      consumes:
-      - application/json
-      description: Get user by id
+      description: Send otp
       parameters:
-      - description: User ID
-        in: path
-        name: id
+      - description: GetOtpRequest
+        in: body
+        name: request
         required: true
-        type: integer
+        schema:
+          $ref: '#/definitions/services.GetOtpRequest'
       produces:
       - application/json
       responses:
-        "200":
+        "201":
           description: Success
           schema:
             $ref: '#/definitions/github_com_mohsen104_web-api_api_helper.BaseHttpResponse'
@@ -67,7 +58,11 @@ paths:
           description: Failed
           schema:
             $ref: '#/definitions/github_com_mohsen104_web-api_api_helper.BaseHttpResponse'
-      summary: Get user by id
+        "409":
+          description: Failed
+          schema:
+            $ref: '#/definitions/github_com_mohsen104_web-api_api_helper.BaseHttpResponse'
+      summary: Send otp
       tags:
       - users
 swagger: "2.0"

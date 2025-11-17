@@ -1,6 +1,5 @@
 server:
-  internalPort: 5005
-  externalPort: 5005
+  port: 3000
   runMode: debug
   domain: localhost
 logger:
@@ -31,3 +30,7 @@ redis:
   poolSize: 10
   poolTimeout: 15
   idleCheckFrequency: 500
+otp:
+  expireTime: 120
+  digits: 6
+  limiter: 100
