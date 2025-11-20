@@ -14,10 +14,11 @@ import (
 )
 
 type UserService struct {
-	logger     logging.Logger
-	cfg        *config.Config
-	otpService *OtpService
-	database   *gorm.DB
+	logger       logging.Logger
+	cfg          *config.Config
+	otpService   *OtpService
+	tokenService *TokenService
+	database     *gorm.DB
 }
 
 type GetOtpRequest struct {
@@ -160,40 +161,72 @@ func (u *UserService) RegisterByUsername(ctx context.Context, req RegisterUserBy
 	return nil
 }
 
-func (u *UserService) RegisterAndLoginByMobileNumber(ctx context.Context, mobileNumber string, otp string) (*TokenDetails, error) {
-	err := u.otpUsecase.ValidateOtp(mobileNumber, otp)
+func (u *UserService) RegisterAndLoginByMobileNumber(ctx context.Context, req RegisterLoginByMobile) (*TokenDetails, error) {
+	err := u.otpService.ValidateOtp(req.MobileNumber, req.Otp)
 	if err != nil {
 		return nil, err
 	}
-	exists, err := u.repository.ExistsMobileNumber(ctx, mobileNumber)
+	exists, err := u.ExistsMobileNumber(ctx, req.MobileNumber)
 	if err != nil {
 		return nil, err
 	}
 
-	user := model.User{MobileNumber: mobileNumber, Username: mobileNumber}
+	user := models.User{MobileNumber: req.MobileNumber, Username: req.MobileNumber}
 
 	if exists {
-		user, err = u.repository.FetchUserInfo(ctx, user.Username, user.Password)
+		var user models.User
+
+		err = u.database.Model(&models.User{}).Where("username = ?", user.Username).Preload("UserRoles", func(db *gorm.DB) *gorm.DB {
+			return db.Preload("Role")
+		}).Find(&user).Error
 		if err != nil {
 			return nil, err
 		}
 
-		return u.generateToken(user)
+		tdto := TokenDto{UserId: user.Id, FirstName: user.FirstName, LastName: user.LastName, Email: user.Email, Username: user.Username}
+
+		if len(*user.UserRoles) > 0 {
+			for _, ur := range *user.UserRoles {
+				tdto.Roles = append(tdto.Roles, ur.Role.Name)
+			}
+		}
+
+		token, err := u.tokenService.GenerateToken(&tdto)
+
+		if err != nil {
+			return nil, err
+		}
+
+		return token, nil
 	}
 
-	// Register and login
-	bp := []byte(common.GeneratePassword())
+	bp := []byte(common.GenerateOtp())
 	hp, err := bcrypt.GenerateFromPassword(bp, bcrypt.DefaultCost)
 	if err != nil {
 		u.logger.Error(logging.General, logging.HashPassword, err.Error(), nil)
 		return nil, err
 	}
 	user.Password = string(hp)
-
-	user, err = u.repository.CreateUser(ctx, user)
+	roleId, err := u.GetDefaultRole(ctx)
 	if err != nil {
+		u.logger.Error(logging.Postgres, logging.DefaultRoleNotFound, err.Error(), nil)
 		return nil, err
 	}
-	return u.generateToken(user)
 
+	tx := u.database.Begin()
+	err = tx.Create(&user).Error
+	if err != nil {
+		tx.Rollback()
+		u.logger.Error(logging.Postgres, logging.Rollback, err.Error(), nil)
+		return nil, err
+	}
+	err = tx.Create(&models.UserRole{RoleId: roleId, UserId: user.Id}).Error
+	if err != nil {
+		tx.Rollback()
+		u.logger.Error(logging.Postgres, logging.Rollback, err.Error(), nil)
+		return nil, err
+	}
+	tx.Commit()
+	u.database.Model(&models.User{})
+	return nil, nil
 }
